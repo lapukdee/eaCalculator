@@ -18,7 +18,7 @@ int OnInit()
 //--- create timer
    EventSetTimer(60);
    //---
-   printf(" ----------------------------------------------------- ");
+   printf(" ---------------------------------------------------------------------------------------------------------- ");
    string CMM = "";
    //
    string i_Symbol = Symbol() + "";
@@ -29,9 +29,9 @@ int OnInit()
                                         i_SymbolA, i_SymbolB, i_SymbolC,
                                         i_PipValue);
 
-   printf("Reslut :: " + i_Symbol + " | " + i_SymbolA + " : " + i_SymbolB + " : " + i_SymbolC);
-   printf("r :: " + EnumToString(r));
-   printf("PipValue :: " + DoubleToStr(i_PipValue, 2));
+   //printf("Reslut :: " + i_Symbol + " | " + i_SymbolA + " : " + i_SymbolB + " : " + i_SymbolC);
+   //printf("r :: " + EnumToString(r));
+   //printf("PipValue :: " + DoubleToStr(i_PipValue, 2));
    //
    Comment(CMM);
 //---
@@ -132,6 +132,7 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
    Symbol_BASE       = SymbolInfoString(Symbol_, SYMBOL_CURRENCY_BASE);
    Symbol_PROFIT     = SymbolInfoString(Symbol_, SYMBOL_CURRENCY_PROFIT);
    Symbol_Currency   = AccountCurrency();
+   printf("Symbol_ :: " + Symbol_ + " | " + Symbol_BASE + " : " + Symbol_PROFIT + " : " + Symbol_Currency);
 
    E_ModeCurrency res = -1;
 
@@ -141,7 +142,16 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
          if(Symbol_BASE == Symbol_Currency) {
             res = E_ModeCurrency_USDX;
             //
-            PipValue = 10 / Bid;
+            string Symbol_Symple = Symbol_PROFIT + Symbol_Currency;
+            if(SymbolInfoInteger(Symbol_Symple, SYMBOL_SELECT)) {
+            printf("Symbol_Symple 1 : *" + Symbol_Symple);
+               PipValue = 10 * MarketInfo(Symbol_Symple, MODE_BID);
+            } else {
+               Symbol_Symple = Symbol_Currency + Symbol_PROFIT;
+               printf("Symbol_Symple 2 : /" + Symbol_Symple);
+               //PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
+               PipValue = 10 / MarketInfo(Symbol_Symple, MODE_BID);
+            }
          } else {
             res = E_ModeCurrency_XUSD;
             PipValue = 10;
@@ -150,13 +160,12 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
          res = E_ModeCurrency_XO;
 
          string Symbol_Symple = Symbol_PROFIT + Symbol_Currency;
-
-         if(MarketInfo(Symbol_Symple, MODE_TRADEALLOWED)) {
-            printf("Symbol_Symple 1 : " + Symbol_Symple);
+         if(SymbolInfoInteger(Symbol_Symple, SYMBOL_SELECT)) {
+            printf("Symbol_Symple 1 : *" + Symbol_Symple);
             PipValue = 10 * MarketInfo(Symbol_Symple, MODE_BID);
          } else {
             Symbol_Symple = Symbol_Currency + Symbol_PROFIT;
-            printf("Symbol_Symple 2 : " + Symbol_Symple);
+            printf("Symbol_Symple 2 : /" + Symbol_Symple);
             //PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
             PipValue = 10 / MarketInfo(Symbol_Symple, MODE_BID);
          }
@@ -166,6 +175,9 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
       res = E_ModeCurrency_CFD;
       PipValue = -10;
    }
+
+   printf("r :: " + EnumToString(res));
+   printf("PipValue :: " + DoubleToStr(PipValue, 2));
 
    return res;
 }
