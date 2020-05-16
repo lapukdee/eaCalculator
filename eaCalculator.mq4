@@ -156,9 +156,11 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
          PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
 
 
+
          Symbol_Symple = Symbol_Currency + Symbol_PROFIT;
          printf("Symbol_Symple 2 : " + Symbol_Symple);
          PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
+
       }
    } else {
       res = E_ModeCurrency_CFD;
