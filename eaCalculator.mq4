@@ -133,8 +133,12 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
    Symbol_PROFIT     = SymbolInfoString(Symbol_, SYMBOL_CURRENCY_PROFIT);
    Symbol_Currency   = AccountCurrency();
    printf("Symbol_ :: " + Symbol_ + " | " + Symbol_BASE + " : " + Symbol_PROFIT + " : " + Symbol_Currency);
-
+//---
    E_ModeCurrency res = -1;
+   double Coin = (1 / MathPow(10, MarketInfo(Symbol_, MODE_DIGITS) - 1)) * MarketInfo(Symbol_, MODE_LOTSIZE);
+   //printf("Coin :: " + Coin);
+
+//---
 
    if(Symbol_BASE != Symbol_PROFIT) {
 
@@ -142,43 +146,43 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
          if(Symbol_BASE == Symbol_Currency) {
             res = E_ModeCurrency_USDX;
             //
-            string Symbol_Symple = Symbol_PROFIT + Symbol_Currency;
-            if(SymbolInfoInteger(Symbol_Symple, SYMBOL_SELECT)) {
-            printf("Symbol_Symple 1 : *" + Symbol_Symple);
-               PipValue = 10 * MarketInfo(Symbol_Symple, MODE_BID);
-            } else {
-               Symbol_Symple = Symbol_Currency + Symbol_PROFIT;
-               printf("Symbol_Symple 2 : /" + Symbol_Symple);
-               //PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
-               PipValue = 10 / MarketInfo(Symbol_Symple, MODE_BID);
-            }
+            PipValue = ConvertCurrency(Coin, Symbol_PROFIT, Symbol_Currency);
+
          } else {
             res = E_ModeCurrency_XUSD;
-            PipValue = 10;
+            PipValue = Coin;
          }
       } else {
          res = E_ModeCurrency_XO;
-
-         string Symbol_Symple = Symbol_PROFIT + Symbol_Currency;
-         if(SymbolInfoInteger(Symbol_Symple, SYMBOL_SELECT)) {
-            printf("Symbol_Symple 1 : *" + Symbol_Symple);
-            PipValue = 10 * MarketInfo(Symbol_Symple, MODE_BID);
-         } else {
-            Symbol_Symple = Symbol_Currency + Symbol_PROFIT;
-            printf("Symbol_Symple 2 : /" + Symbol_Symple);
-            //PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
-            PipValue = 10 / MarketInfo(Symbol_Symple, MODE_BID);
-         }
-
+         PipValue = ConvertCurrency(Coin, Symbol_PROFIT, Symbol_Currency);
       }
    } else {
       res = E_ModeCurrency_CFD;
-      PipValue = -10;
+      PipValue = -Coin;
    }
 
    printf("r :: " + EnumToString(res));
    printf("PipValue :: " + DoubleToStr(PipValue, 2));
 
    return res;
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double ConvertCurrency(double Coin, string Symbol_PROFIT, string Symbol_Currency)
+{
+   double PipValue = -1;
+   string Symbol_Symple = Symbol_PROFIT + Symbol_Currency;
+   if(SymbolInfoInteger(Symbol_Symple, SYMBOL_SELECT)) {
+      //printf("Symbol_Symple 1 : *" + Symbol_Symple);
+      PipValue = Coin * MarketInfo(Symbol_Symple, MODE_BID);
+   } else {
+      Symbol_Symple = Symbol_Currency + Symbol_PROFIT;
+      printf("Symbol_Symple 2 : /" + Symbol_Symple);
+      //PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
+      PipValue = Coin / MarketInfo(Symbol_Symple, MODE_BID);
+   }
+   return PipValue;
 }
 //+------------------------------------------------------------------+
