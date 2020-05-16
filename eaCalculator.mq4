@@ -18,6 +18,7 @@ int OnInit()
 //--- create timer
    EventSetTimer(60);
    //---
+   printf(" ----------------------------------------------------- ");
    string CMM = "";
    //
    string i_Symbol = Symbol() + "";
@@ -30,7 +31,7 @@ int OnInit()
 
    printf("Reslut :: " + i_Symbol + " | " + i_SymbolA + " : " + i_SymbolB + " : " + i_SymbolC);
    printf("r :: " + EnumToString(r));
-   printf("PipValue :: " + DoubleToStr(i_PipValue, 3));
+   printf("PipValue :: " + DoubleToStr(i_PipValue, 2));
    //
    Comment(CMM);
 //---
@@ -149,8 +150,15 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
          res = E_ModeCurrency_XO;
          PipValue = 10;
 
+         string Symbol_Symple = Symbol_PROFIT + Symbol_Currency;
+
+         printf("Symbol_Symple 1 : " + Symbol_Symple);
+         PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
 
 
+         Symbol_Symple = Symbol_Currency + Symbol_PROFIT;
+         printf("Symbol_Symple 2 : " + Symbol_Symple);
+         PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
       }
    } else {
       res = E_ModeCurrency_CFD;
