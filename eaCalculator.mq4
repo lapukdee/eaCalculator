@@ -148,22 +148,23 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
          }
       } else {
          res = E_ModeCurrency_XO;
-         PipValue = 10;
 
          string Symbol_Symple = Symbol_PROFIT + Symbol_Currency;
 
-         printf("Symbol_Symple 1 : " + Symbol_Symple);
-         PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
-
-
-
-         Symbol_Symple = Symbol_Currency + Symbol_PROFIT;
-         printf("Symbol_Symple 2 : " + Symbol_Symple);
-         PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
+         if(MarketInfo(Symbol_Symple, MODE_TRADEALLOWED)) {
+            printf("Symbol_Symple 1 : " + Symbol_Symple);
+            PipValue = 10 * MarketInfo(Symbol_Symple, MODE_BID);
+         } else {
+            Symbol_Symple = Symbol_Currency + Symbol_PROFIT;
+            printf("Symbol_Symple 2 : " + Symbol_Symple);
+            //PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
+            PipValue = 10 / MarketInfo(Symbol_Symple, MODE_BID);
+         }
 
       }
    } else {
       res = E_ModeCurrency_CFD;
+      PipValue = -10;
    }
 
    return res;
