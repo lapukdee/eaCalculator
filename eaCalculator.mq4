@@ -20,15 +20,17 @@ int OnInit()
    //---
    string CMM = "";
    //
-   string i_Symbol = Symbol() + "#";
-   string i_SymbolA = "", i_SymbolB = "", i_SymbolC = AccountCurrency();
+   string i_Symbol = Symbol() + "";
+   string i_SymbolA = "", i_SymbolB = "",  i_SymbolC = "";
+   double i_PipValue = 0;
 
-   E_ModeCurrency r = SymbolNameReduce(i_Symbol,
-                                       i_SymbolA, i_SymbolB);
+   E_ModeCurrency r = SymbolNameReduce2(i_Symbol,
+                                        i_SymbolA, i_SymbolB, i_SymbolC,
+                                        i_PipValue);
 
    printf("Reslut :: " + i_Symbol + " | " + i_SymbolA + " : " + i_SymbolB + " : " + i_SymbolC);
-
-
+   printf("r :: " + EnumToString(r));
+   printf("PipValue :: " + DoubleToStr(i_PipValue, 3));
    //
    Comment(CMM);
 //---
@@ -75,7 +77,8 @@ void OnChartEvent(const int id,
 //|                                                                  |
 //+------------------------------------------------------------------+
 E_ModeCurrency SymbolNameReduce(string Symbol_,
-                                string &SymbolA, string &SymbolB)
+                                string &SymbolA, string &SymbolB, string &SymbolC,
+                                double &PipValue)
 {
    string Symbol_1 = (Symbol_ == "") ? Symbol() : Symbol_;
 
@@ -95,8 +98,39 @@ E_ModeCurrency SymbolNameReduce(string Symbol_,
          break;
       }
    }
+   SymbolC = AccountCurrency();
 //---
+   E_ModeCurrency res = -1;
+   if(SymbolA == SymbolC || SymbolB == SymbolC) {
+      if(SymbolA == SymbolC) {
+         res = E_ModeCurrency_USDX;
+         //
+         PipValue = 10 / Bid;
+      } else {
+         res = E_ModeCurrency_XUSD;
+         PipValue = 10;
+      }
+   } else {
+      res = E_ModeCurrency_XO;
+      PipValue = 10;
 
-   return Symbol_1;
+
+      //SymbolB
+   }
+//---
+   return res;
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+E_ModeCurrency SymbolNameReduce2(string Symbol_,
+                                 string &SymbolA, string &SymbolB, string &SymbolC,
+                                 double &PipValue)
+{
+   SymbolA = SymbolInfoString(Symbol_, SYMBOL_CURRENCY_BASE);
+   SymbolB = SymbolInfoString(Symbol_, SYMBOL_CURRENCY_PROFIT);
+   SymbolC = AccountCurrency();
+   return 0;
 }
 //+------------------------------------------------------------------+
