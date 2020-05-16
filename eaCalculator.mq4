@@ -5,10 +5,10 @@
 //+------------------------------------------------------------------+
 #property strict
 enum E_ModeCurrency {
-   E_ModeCurrency_XUSD,
-   E_ModeCurrency_USDX,
-   E_ModeCurrency_XO,
-   E_ModeCurrency_CFD,
+   E_ModeCurrency_XUSD, //XUSD
+   E_ModeCurrency_USDX, //USDX
+   E_ModeCurrency_XO,   //XO
+   E_ModeCurrency_CFD,  //CFD
 };
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
@@ -125,12 +125,37 @@ E_ModeCurrency SymbolNameReduce(string Symbol_,
 //|                                                                  |
 //+------------------------------------------------------------------+
 E_ModeCurrency SymbolNameReduce2(string Symbol_,
-                                 string &SymbolA, string &SymbolB, string &SymbolC,
+                                 string &Symbol_BASE, string &Symbol_PROFIT, string &Symbol_Currency,
                                  double &PipValue)
 {
-   SymbolA = SymbolInfoString(Symbol_, SYMBOL_CURRENCY_BASE);
-   SymbolB = SymbolInfoString(Symbol_, SYMBOL_CURRENCY_PROFIT);
-   SymbolC = AccountCurrency();
-   return 0;
+   Symbol_BASE       = SymbolInfoString(Symbol_, SYMBOL_CURRENCY_BASE);
+   Symbol_PROFIT     = SymbolInfoString(Symbol_, SYMBOL_CURRENCY_PROFIT);
+   Symbol_Currency   = AccountCurrency();
+
+   E_ModeCurrency res = -1;
+
+   if(Symbol_BASE != Symbol_PROFIT) {
+
+      if(Symbol_BASE == Symbol_Currency || Symbol_PROFIT == Symbol_Currency) {
+         if(Symbol_BASE == Symbol_Currency) {
+            res = E_ModeCurrency_USDX;
+            //
+            PipValue = 10 / Bid;
+         } else {
+            res = E_ModeCurrency_XUSD;
+            PipValue = 10;
+         }
+      } else {
+         res = E_ModeCurrency_XO;
+         PipValue = 10;
+
+
+
+      }
+   } else {
+      res = E_ModeCurrency_CFD;
+   }
+
+   return res;
 }
 //+------------------------------------------------------------------+
