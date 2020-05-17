@@ -135,8 +135,8 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
    printf("Symbol_ :: " + Symbol_ + " | " + Symbol_BASE + " : " + Symbol_PROFIT + " : " + Symbol_Currency);
 //---
    E_ModeCurrency res = -1;
-   double Coin = (1 / MathPow(10, MarketInfo(Symbol_, MODE_DIGITS) - 1)) * MarketInfo(Symbol_, MODE_LOTSIZE);
-   //printf("Coin :: " + Coin);
+   double Coin = (1 / MathPow(10, MarketInfo(Symbol_, MODE_DIGITS) - 1)) * MarketInfo(Symbol_, MODE_LOTSIZE) * 1;
+   printf("Coin :: " + Coin);
 
 //---
 
