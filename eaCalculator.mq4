@@ -139,12 +139,10 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
 //---
    E_ModeCurrency res = -1;
    double Coin = -1;
-   printf("Coin :: " + Coin);
-
 //---
 
    if(Symbol_BASE != Symbol_PROFIT) {
-   
+
       Coin = (1 / MathPow(10, MarketInfo(Symbol_, MODE_DIGITS) - 1)) * MarketInfo(Symbol_, MODE_LOTSIZE) * 1;
       if(Symbol_BASE == Symbol_Currency || Symbol_PROFIT == Symbol_Currency) {
          if(Symbol_BASE == Symbol_Currency) {
@@ -160,16 +158,19 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
          res = E_ModeCurrency_XO;
          PipValue = ConvertCurrency(Coin, Symbol_PROFIT, Symbol_Currency);
       }
-      
-   } else {
-   
-      res = E_ModeCurrency_CFD;
-      Coin = (1 / MathPow(10, MarketInfo(Symbol_, MODE_DIGITS) - 1)) * MarketInfo(Symbol_, MODE_LOTSIZE) * 1;
-      PipValue = Coin;
-      
-   }
 
-   printf("r :: " + EnumToString(res));
+   } else {
+
+      if(Symbol_BASE == Symbol_PROFIT && Symbol_PROFIT == Symbol_Currency) {
+         res = E_ModeCurrency_CFD;
+         Coin = (1 / MathPow(10, MarketInfo(Symbol_, MODE_DIGITS))) * MarketInfo(Symbol_, MODE_LOTSIZE) * 1;
+         PipValue = Coin;
+      }
+      
+
+   }
+   printf("Coin :: " + Coin);
+   printf("Type :: " + EnumToString(res));
    printf("PipValue :: " + DoubleToStr(PipValue, 2));
 
    return res;
