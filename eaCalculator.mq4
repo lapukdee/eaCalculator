@@ -17,10 +17,12 @@ int OnInit()
 {
 //--- create timer
    EventSetTimer(60);
-   //---
+//---
    printf(" ---------------------------------------------------------------------------------------------------------- ");
    string CMM = "";
-   //
+//
+
+
    string i_Symbol = Symbol() + "";
    string i_SymbolA = "", i_SymbolB = "",  i_SymbolC = "";
    double i_PipValue = 0;
@@ -29,10 +31,11 @@ int OnInit()
                                         i_SymbolA, i_SymbolB, i_SymbolC,
                                         i_PipValue);
 
-   //printf("Reslut :: " + i_Symbol + " | " + i_SymbolA + " : " + i_SymbolB + " : " + i_SymbolC);
-   //printf("r :: " + EnumToString(r));
-   //printf("PipValue :: " + DoubleToStr(i_PipValue, 2));
-   //
+//printf("Reslut :: " + i_Symbol + " | " + i_SymbolA + " : " + i_SymbolB + " : " + i_SymbolC);
+//printf("r :: " + EnumToString(r));
+//printf("PipValue :: " + DoubleToStr(i_PipValue, 2));
+//
+
    Comment(CMM);
 //---
    return(INIT_SUCCEEDED);
@@ -170,15 +173,15 @@ E_ModeCurrency SymbolNameReduce2(string Symbol_,
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double ConvertCurrency(double Coin, string Symbol_PROFIT, string Symbol_Currency)
+double ConvertCurrency(double Coin, string Symbol_Exchange, string Symbol_Currency)
 {
    double PipValue = -1;
-   string Symbol_Symple = Symbol_PROFIT + Symbol_Currency;
+   string Symbol_Symple = Symbol_Exchange + Symbol_Currency;
    if(SymbolInfoInteger(Symbol_Symple, SYMBOL_SELECT)) {
       //printf("Symbol_Symple 1 : *" + Symbol_Symple);
       PipValue = Coin * MarketInfo(Symbol_Symple, MODE_BID);
    } else {
-      Symbol_Symple = Symbol_Currency + Symbol_PROFIT;
+      Symbol_Symple = Symbol_Currency + Symbol_Exchange;
       printf("Symbol_Symple 2 : /" + Symbol_Symple);
       //PipValue = MarketInfo(Symbol_Symple, MODE_TRADEALLOWED);
       PipValue = Coin / MarketInfo(Symbol_Symple, MODE_BID);
